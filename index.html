@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy New Year บี๋ 💖</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(180deg,#ffd1e8,#ff9ecf,#ff6fb1);
+    color:#7a0042;
+    text-align:center;
+    overflow:hidden;
+}
+section{
+    min-height:100vh;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+h1{font-size:36px;color:#ff2f92;text-shadow:0 0 10px #fff}
+h2{color:#ff4fa3}
+p{font-size:20px}
+
+button{
+    padding:14px 32px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff7abf,#ff2f92);
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(255,100,180,.5);
+}
+
+.pass-box{display:flex;gap:12px}
+.pass-box input{
+    width:50px;height:60px;font-size:32px;text-align:center;
+    border-radius:12px;border:none;
+    box-shadow:0 0 10px rgba(255,100,180,.5)
+}
+
+.gallery{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.gallery img{width:250px;border-radius:20px;box-shadow:0 10px 25px rgba(255,180,180,.6)}
+
+.fade{animation:fade 1.5s}
+@keyframes fade{from{opacity:0;transform:translateY(40px)}to{opacity:1}}
+
+#fireworks{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.heart{position:fixed;bottom:-20px;font-size:22px;animation:float 7s linear infinite}
+@keyframes float{to{transform:translateY(-120vh);opacity:0}}
+
+#puzzle{width:300px;height:300px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:20px}
+.piece{width:100%;height:100%;background-size:300px 300px;cursor:pointer;border-radius:8px}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="https://drive.google.com/uc?export=download&id=1gtQ8z_zOEfBDzkFhyQClHvk30MqQP81Q" loop></audio>
+
+<canvas id="fireworks"></canvas>
+
+<section id="lock" style="display:flex">
+<h1>💌 Hello บี๋ 💌</h1>
+<p>รบกวนบี๋ ใส่รหัสด้วยนะค้าบบ</p>
+<div class="pass-box">
+<input maxlength="1" oninput="move(this,1)">
+<input maxlength="1" oninput="move(this,2)">
+<input maxlength="1" oninput="move(this,3)">
+<input maxlength="1" oninput="move(this,4)">
+<input maxlength="1" oninput="move(this,5)">
+<input maxlength="1" oninput="move(this,6)">
+</div><br>
+<button onclick="check()">กดตรงนี้ต่อเรยคั้บบ</button>
+</section>
+
+<section id="s1" class="fade">
+<h1>2026 To บี๋ 💖</h1>
+<p id="type"></p>
+<button onclick="next('s2')">ไปกันต่อ</button>
+</section>
+
+<section id="s2" class="fade">
+<h2>จากวันนั้น ถึง วันนี้</h2>
+<p>อ้วนมีความสุขม๊ากกกก แฮปปี้ๆ <br>นานเหมือนกันนะเนี้ย </p>
+<button onclick="next('s3')">ไปต่อ</button>
+</section>
+
+<section id="s3" class="fade">
+<h2>ช่วงเวลาดี ๆ</h2>
+<p>ทุกการเดินทาง ทุกเสียงหัวเราะ คือความทรงจำต่างๆ<br>พอนึกดูดีๆ ก็ผ่านไรมาเยอะนะ ปีนี้ก็นับว่าแก่ขึ้นอีกปี</p>
+<button onclick="next('s4')">ไปต่อ</button>
+</section>
+
+<section id="s4" class="fade">
+<h2>เรื่องราวต่างในชีวิต มีหลายรสชาต</h2>
+<p>มีทั้งวันที่ยิ้ม มีทั้งวันที่ร้องไห้ มันก็เป็นความทรงจำที่ นานๆไปก็นั่งยิ้มเน้อะ 55555+</p>
+<button onclick="next('s5')">จิ้มต่อเรยยย</button>
+</section>
+
+<section id="s5" class="fade">
+<h2>i luv 📸</h2>
+<div class="gallery">
+<img src="img1.jpg"><img src="img2.jpg"><img src="img3.jpg"><br>
+</div>
+<button onclick="next('s6')">Babe</button>
+</section>
+
+<section id="s6" class="fade">
+<h2>ถึงบี๋ 💌</h2>
+<p>ก็ขอให้บี๋มีความสุขมากๆกับปีนี้นะ <br>ไม่ว่าอนาคตจะเป็นยังไง ก็ขอให้สมหวังกับสิ่งที่ขอ<br>ขอให้บี๋น่ารักแบบนี้ไปนานๆ อย่าเครียดเยอะ<br>รักบี๋ที่สุด มีอะไรก็บอกอ้วนได้ จะอยู่ข้างๆเสมอ คิดถึงง</p>
+<button onclick="next('sPuzzle')">ไปต่ออีกนิด</button>
+</section>
+
+<section id="sPuzzle" class="fade">
+<h2>ต่อภาพความทรงจำ 🧩</h2>
+<p>ลากชิ้นส่วนมาต่อให้ครบ แล้วค่อยกดน้าาา</p>
+<div id="puzzle"></div>
+<button id="puzzleBtn" style="display:none" onclick="next('s7')">Go 💖</button>
+</section>
+
+<section id="s7" class="fade">
+<h1>🎆 Happy New Year 2026 🎆</h1>
+<h2>รักบี๋มากนะ 💖 ยิ้มเยอะๆค้าบบ</h2>
+</section>
+
+<script>
+const music=document.getElementById("music");
+
+function move(el,i){
+    if(el.value && i<6) document.querySelectorAll('.pass-box input')[i].focus();
+}
+function check(){
+    let code='';
+    document.querySelectorAll('.pass-box input').forEach(i=>code+=i.value);
+    if(code==='051061'){ lock.style.display='none'; next('s1'); }
+    else alert('รหัสไม่ถูกต้อง 😝');
+}
+
+function next(id){
+    if(music.paused){ music.volume=0; music.play(); let v=0,fade=setInterval(()=>{if(v<0.8){v+=0.05;music.volume=v}else clearInterval(fade)},200);}
+    document.querySelectorAll('section').forEach(s=>s.style.display='none');
+    document.getElementById(id).style.display='flex';
+}
+
+const text="ขอบคุณที่เข้ามาเป็นความสุขของผมทุกวัน รักบี๋ที่สุดเลยนะ 💖";
+let ti=0;
+(function type(){ if(ti<text.length){ type.innerHTML+=text.charAt(ti++); setTimeout(type,80);} })();
+
+setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart"; h.innerHTML="💖";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),7000);
+},400);
+
+const c=fireworks,ctx=c.getContext("2d");
+c.width=innerWidth; c.height=innerHeight;
+let p=[];
+function boom(){ let x=Math.random()*c.width,y=Math.random()*c.height/2; for(let i=0;i<80;i++) p.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,l:100});}
+function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    p.forEach((o,i)=>{o.x+=o.vx;o.y+=o.vy;o.l--;ctx.fillStyle=`rgba(255,180,255,${o.l/100})`;ctx.beginPath();ctx.arc(o.x,o.y,2,0,7);ctx.fill();if(o.l<=0)p.splice(i,1);});
+    requestAnimationFrame(draw);
+}
+setInterval(boom,700); draw();
+
+// PUZZLE
+const puzzleImg="img1.jpg";
+const puzzle=document.getElementById("puzzle");
+let order=[...Array(9).keys()].sort(()=>Math.random()-0.5);
+
+order.forEach((i,pos)=>{
+    const d=document.createElement("div");
+    d.className="piece";
+    d.dataset.correct=pos;
+    d.style.backgroundImage=`url(${puzzleImg})`;
+    const x=i%3,y=Math.floor(i/3);
+    d.style.backgroundPosition=`-${x*100}px -${y*100}px`;
+    d.draggable=true;
+    puzzle.appendChild(d);
+});
+
+let drag;
+document.addEventListener("dragstart",e=>drag=e.target);
+document.addEventListener("dragover",e=>e.preventDefault());
+document.addEventListener("drop",e=>{
+    if(e.target.className==="piece"){
+        const a=drag.style.backgroundPosition;
+        drag.style.backgroundPosition=e.target.style.backgroundPosition;
+        e.target.style.backgroundPosition=a;
+        checkPuzzle();
+    }
+});
+
+function checkPuzzle(){
+    let ok=true;
+    document.querySelectorAll(".piece").forEach((p,i)=>{
+        if(parseInt(p.dataset.correct)!==i) ok=false;
+    });
+    const btn=document.getElementById("puzzleBtn");
+    if(ok){ btn.style.display="inline-block"; btn.style.animation="fade 1.5s"; }
+    else btn.style.display="none";
+}
+</script>
+</body>
+</html>
