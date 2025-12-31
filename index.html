@@ -56,13 +56,12 @@ button{
 
 #puzzle{width:300px;height:300px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:20px}
 .piece{width:100%;height:100%;background-size:300px 300px;cursor:pointer;border-radius:8px}
-.selected{outline:4px solid #ff2f92}
 </style>
 </head>
 
 <body>
 
-<audio id="music" preload="auto"></audio>
+<audio id="music" src="love.mp3" loop></audio>
 <canvas id="fireworks"></canvas>
 
 <section id="lock" style="display:flex">
@@ -131,41 +130,27 @@ button{
 
 <script>
 const music=document.getElementById("music");
-music.src="https://drive.google.com/uc?export=download&id=1gtQ8z_zOEfBDzkFhyQClHvk30MqQP81Q";
 
-// --- PASSWORD
 function move(el,i){
     if(el.value && i<6) document.querySelectorAll('.pass-box input')[i].focus();
 }
-
 function check(){
     let code='';
     document.querySelectorAll('.pass-box input').forEach(i=>code+=i.value);
-
-    if(code==='051061'){
-        music.play().catch(()=>{});
-        lock.style.display='none';
-        next('s1');
-    } else alert('รหัสไม่ถูกต้อง 😝');
+    if(code==='051061'){ lock.style.display='none'; next('s1'); }
+    else alert('รหัสไม่ถูกต้อง 😝');
 }
 
-// --- PAGE
 function next(id){
+    if(music.paused){ music.volume=0; music.play(); let v=0,fade=setInterval(()=>{if(v<0.8){v+=0.05;music.volume=v}else clearInterval(fade)},200);}
     document.querySelectorAll('section').forEach(s=>s.style.display='none');
     document.getElementById(id).style.display='flex';
 }
 
-// --- TYPE
 const text="ขอบคุณที่เข้ามาเป็นความสุขของผมทุกวัน รักบี๋ที่สุดเลยนะ 💖";
 let ti=0;
-(function type(){
-    if(ti<text.length){
-        type.innerHTML+=text.charAt(ti++);
-        setTimeout(type,80);
-    }
-})();
+(function type(){ if(ti<text.length){ type.innerHTML+=text.charAt(ti++); setTimeout(type,80);} })();
 
-// --- HEART
 setInterval(()=>{
     const h=document.createElement("div");
     h.className="heart"; h.innerHTML="💖";
@@ -174,69 +159,53 @@ setInterval(()=>{
     setTimeout(()=>h.remove(),7000);
 },400);
 
-// --- FIREWORK
 const c=fireworks,ctx=c.getContext("2d");
 c.width=innerWidth; c.height=innerHeight;
 let p=[];
-function boom(){
-    let x=Math.random()*c.width,y=Math.random()*c.height/2;
-    for(let i=0;i<80;i++)
-        p.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,l:100});
-}
+function boom(){ let x=Math.random()*c.width,y=Math.random()*c.height/2; for(let i=0;i<80;i++) p.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,l:100});}
 function draw(){
     ctx.clearRect(0,0,c.width,c.height);
-    p.forEach((o,i)=>{
-        o.x+=o.vx;o.y+=o.vy;o.l--;
-        ctx.fillStyle=`rgba(255,180,255,${o.l/100})`;
-        ctx.beginPath();ctx.arc(o.x,o.y,2,0,7);ctx.fill();
-        if(o.l<=0)p.splice(i,1);
-    });
+    p.forEach((o,i)=>{o.x+=o.vx;o.y+=o.vy;o.l--;ctx.fillStyle=`rgba(255,180,255,${o.l/100})`;ctx.beginPath();ctx.arc(o.x,o.y,2,0,7);ctx.fill();if(o.l<=0)p.splice(i,1);});
     requestAnimationFrame(draw);
 }
 setInterval(boom,700); draw();
 
-// --- PUZZLE (iPad tap mode)
+// PUZZLE
+const puzzleImg="img1.jpg";
 const puzzle=document.getElementById("puzzle");
-const img="img1.jpg";
 let order=[...Array(9).keys()].sort(()=>Math.random()-0.5);
-let selected=null;
 
-order.forEach(i=>{
+order.forEach((i,pos)=>{
     const d=document.createElement("div");
     d.className="piece";
-    d.dataset.index=i;
+    d.dataset.correct=pos;
+    d.style.backgroundImage=`url(${puzzleImg})`;
     const x=i%3,y=Math.floor(i/3);
-    d.style.backgroundImage=`url(${img})`;
     d.style.backgroundPosition=`-${x*100}px -${y*100}px`;
+    d.draggable=true;
     puzzle.appendChild(d);
+});
 
-    d.addEventListener("click",()=>{
-        if(!selected){
-            selected=d;
-            d.classList.add("selected");
-        } else {
-            const tempPos=selected.style.backgroundPosition;
-            const tempIndex=selected.dataset.index;
-
-            selected.style.backgroundPosition=d.style.backgroundPosition;
-            selected.dataset.index=d.dataset.index;
-
-            d.style.backgroundPosition=tempPos;
-            d.dataset.index=tempIndex;
-
-            selected.classList.remove("selected");
-            selected=null;
-            checkPuzzle();
-        }
-    });
+let drag;
+document.addEventListener("dragstart",e=>drag=e.target);
+document.addEventListener("dragover",e=>e.preventDefault());
+document.addEventListener("drop",e=>{
+    if(e.target.className==="piece"){
+        const a=drag.style.backgroundPosition;
+        drag.style.backgroundPosition=e.target.style.backgroundPosition;
+        e.target.style.backgroundPosition=a;
+        checkPuzzle();
+    }
 });
 
 function checkPuzzle(){
     let ok=true;
     document.querySelectorAll(".piece").forEach((p,i)=>{
-        if(parseInt(p.dataset.index)!==i) ok=false;
+        if(parseInt(p.dataset.correct)!==i) ok=false;
     });
-    document.getElementById("puzzleBtn").style.display = ok ? "inline-block" : "none";
+    const btn=document.getElementById("puzzleBtn");
+    if(ok){ btn.style.display="inline-block"; btn.style.animation="fade 1.5s"; }
+    else btn.style.display="none";
 }
 </script>
 </body>
